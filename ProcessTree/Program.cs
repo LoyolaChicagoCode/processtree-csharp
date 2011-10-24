@@ -47,9 +47,24 @@ namespace ProcessTree
 
         private static IEnumerable<ProcessLine> ReadLines() {
             string line;
-            Console.ReadLine();
+            var firstLine = Console.ReadLine();
+            var tokens = firstLine.Split(new[]{'\t', ' '}, StringSplitOptions.RemoveEmptyEntries);
+            int pidCol = (-1);
+            int ppidCol = (-1);
+            int cmdCol = (-1);
+            int col = (-1);
+            foreach (var token in tokens.Select(x=>x.ToLower())){
+                col += 1;
+                if(token.CompareTo("pid") == 0){
+                    pidCol = col;
+                } else if(token.CompareTo("ppid") == 0){
+                    ppidCol = col;
+                } else if(token.CompareTo("cmd") == 0){
+                    cmdCol = col;
+                }
+            }
             while ((line = Console.ReadLine()) != null){
-                yield return new ProcessLine(line);
+                yield return new ProcessLine(line, pidCol, ppidCol, cmdCol);
             }
         }
     }
